@@ -1,4 +1,4 @@
-function createMap(divId, Map, 00popData, 10popData) {
+function createMap(divId, Map, popData00, popData10, ageData00, ageData10) {
   var width = 1000;
   var height = 1000;
 
@@ -16,6 +16,7 @@ function createMap(divId, Map, 00popData, 10popData) {
     .projection(projection);
 
   var columnData = d3.map();
+  console.log(Map)
   Map.features.forEach(function(d){
     console.log(d.properties.name.trim());
     columnData.set(d.properties.name.trim(), 0);
@@ -27,15 +28,17 @@ function createMap(divId, Map, 00popData, 10popData) {
     .enter().append("path")
     .attr("d", path );
 }
-function processData(errors, Map, 00popData, 10popData, 00ageData, 10ageData) {
-  createMap("#PopMap", Map, 00popData, 10popData);
+function processData(errors, Map, popData00, popData10, ageData00, ageData10) {
+  
+  console.log(errors)
+  createMap("#PopMap", Map, popData00, popData10, ageData00, ageData10);
 }
 
 queue()
   .defer(d3.json, "https://raw.githubusercontent.com/leoncaoyc/China_Population/master/china.geojson")
-  .defer(d3,json, "https://raw.githubusercontent.com/leoncaoyc/China_Population/master/00pop.json")
-  .defer(d3,json, "https://raw.githubusercontent.com/leoncaoyc/China_Population/master/10pop.json")
-  .defer(d3,json, "https://raw.githubusercontent.com/leoncaoyc/China_Population/master/00age.json")
-  .defer(d3,json, "https://raw.githubusercontent.com/leoncaoyc/China_Population/master/10age.json")
+  .defer(d3.json, "https://raw.githubusercontent.com/leoncaoyc/China_Population/master/00pop.json")
+  .defer(d3.json, "https://raw.githubusercontent.com/leoncaoyc/China_Population/master/10pop.json")
+  .defer(d3.json, "https://raw.githubusercontent.com/leoncaoyc/China_Population/master/00age.json")
+  .defer(d3.json, "https://raw.githubusercontent.com/leoncaoyc/China_Population/master/10age.json")
   .await(processData);
 
