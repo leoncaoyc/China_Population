@@ -29,7 +29,6 @@ function createMap(divId, Map, popData00, popData10, ageData00, ageData10) {
     .attr("d", path );
 }
 function processData(errors, Map, popData00, popData10, ageData00, ageData10) {
-  
   console.log(errors)
   createMap("#PopMap", Map, popData00, popData10, ageData00, ageData10);
 }
