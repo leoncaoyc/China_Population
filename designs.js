@@ -1,4 +1,4 @@
-function createMap(divId, Map) {
+function createMap(divId, Map, 00popData, 10popData) {
   var width = 1000;
   var height = 1000;
 
@@ -15,17 +15,27 @@ function createMap(divId, Map) {
   var path = d3.geo.path()
     .projection(projection);
 
+  var columnData = d3.map();
+  Map.features.forEach(function(d){
+    console.log(d.properties.name.trim());
+    columnData.set(d.properties.name.trim(), 0);
+  })
+
   var states = svg.append("g")
     .selectAll("path")
     .data(Map.features)
     .enter().append("path")
     .attr("d", path );
 }
-function processData(errors, Map) {
-  createMap("#map", Map);
+function processData(errors, Map, 00popData, 10popData, 00ageData, 10ageData) {
+  createMap("#PopMap", Map, 00popData, 10popData);
 }
 
 queue()
-  .defer(d3.json, "https://raw.githubusercontent.com/leoncaoyc/World-population/master/china.geojson")
+  .defer(d3.json, "https://raw.githubusercontent.com/leoncaoyc/China_Population/master/china.geojson")
+  .defer(d3,json, "https://raw.githubusercontent.com/leoncaoyc/China_Population/master/00pop.json")
+  .defer(d3,json, "https://raw.githubusercontent.com/leoncaoyc/China_Population/master/10pop.json")
+  .defer(d3,json, "https://raw.githubusercontent.com/leoncaoyc/China_Population/master/00age.json")
+  .defer(d3,json, "https://raw.githubusercontent.com/leoncaoyc/China_Population/master/10age.json")
   .await(processData);
 
