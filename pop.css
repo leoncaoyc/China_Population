@@ -3,9 +3,15 @@ text {
   font-size: 11pt;
 }
 
-path.state-boundary {
+/*path.state-boundary {
   stroke: #000;
   stroke-width: .5px;
+}*/
+
+line, path { 
+  stroke-width: 1;
+  stroke: black; 
+  fill: none;
 }
 
 .highlight{
@@ -18,4 +24,9 @@ path.state-boundary {
   background: rgba(0, 0, 0, 0.8);
   color: #fff;
   border-radius: 2px;
+}
+
+.highlight{
+  stroke: red;
+  stroke-width: 2px;
 }
