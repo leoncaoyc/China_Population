@@ -187,6 +187,11 @@ function createDensity(divId, Map, popData00, popData10, areaData) {
     if (d.地区!="全国"){
       areaData.forEach(function(d1){
         if (d1.地区==d.地区){
+          console.log (d.地区)
+          console.log (Number(d.人口数))
+          console.log (d1.area)
+          console.log (Number(d1.area))
+          console.log (Number(d.人口数)/Number(d1.area))
           columnData.set(d.地区, Number(d.人口数)/Number(d1.area));
         }
       })
