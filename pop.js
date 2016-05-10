@@ -1,6 +1,6 @@
 function createMap(divId, Map, popData00, popData10) {
   var width = 1000;
-  var height = 800;
+  var height = 1000;
   var sign=0;
 
   var svg = d3.select(divId).append("svg")
@@ -160,7 +160,7 @@ function getpop(name, popdata){
       s=d.人口数;
     }
   })
-  return s;
+  return Number(s);
 }
 
 function createDensity(divId, Map, popData00, popData10, areaData) {
@@ -187,36 +187,28 @@ function createDensity(divId, Map, popData00, popData10, areaData) {
     if (d.地区!="全国"){
       areaData.forEach(function(d1){
         if (d1.地区==d.地区){
-          console.log (d.地区)
-          console.log (Number(d.人口数))
-          console.log (d1.area)
-          console.log (Number(d1.area))
-          console.log (Number(d.人口数)/Number(d1.area))
-          columnData.set(d.地区, Number(d.人口数)/Number(d1.area));
+          columnData.set(d.地区, parseInt(Number(d.人口数)/Number(d1.area)));
         }
       })
     }
   });
   var colExtent10 = d3.extent(columnData.values());
-  console.log(colExtent10)
   popData00.forEach(function(d){
     if (d.地区!="全国"){
       areaData.forEach(function(d1){
         if (d1.地区==d.地区){
-          columnData.set(d.地区, Number(d.人口数)/Number(d1.area));
+          columnData.set(d.地区, parseInt(Number(d.人口数)/Number(d1.area)));
         }
       })
     }
   });
   var colExtent00 = d3.extent(columnData.values());
-  console.log(colExtent00)
-//  columnData.set("台湾",23360000);
+  columnData.set("台湾",200);
 
   var colExtent = d3.extent(colExtent00.concat(colExtent10));
-
   var color = d3.scale.linear()
     .domain(colExtent)
-    .range(["rgb(254,224,210)", "rgb(222,45,38)"])
+    .range(["rgb(247,251,255)", "rgb(8,48,107)"])
     .interpolate(d3.interpolateHcl);
 
   var tip = d3.tip()
@@ -224,9 +216,9 @@ function createDensity(divId, Map, popData00, popData10, areaData) {
     .offset([0, 0])
     .html(function(d) {
       if (sign==0){
-        return "State: "+d.properties.name+"  Population: "+getpop(d.properties.name, popData00);
+        return "State: "+d.properties.name+"  Density: "+getpop(d.properties.name,popData00)/getarea(d.properties.name, areaData)+" people/per sq.km";
       } else {
-        return "State: "+d.properties.name+"  Population: "+getpop(d.properties.name, popData10);
+        return "State: "+d.properties.name+"  Density: "+getpop(d.properties.name,popData10)/getarea(d.properties.name, areaData)+" people/per sq.km";
       }
     });
 
@@ -250,20 +242,85 @@ function createDensity(divId, Map, popData00, popData10, areaData) {
         tip.hide(d,i);
         d3.select(this)
           .classed("highlight", false);
-      })
-    .on('click', function(d,i){
-        var bardata=[Number(getpop(d.properties.name, popData00)),Number(getpop(d.properties.name, popData10))];
-        createBarchart(bardata, colExtent);
       });
+      var DenData = columnData.entries();
+      DenData.sort(function(a,b){
+        if (a.value < b.value) {
+          return 1;
+        }
+        if (a.value > b.value) {
+          return -1;
+        }
+        return 0;
+      });
+      var temp=DenData.slice(0,10)
+      createDenBar(temp);
+}
 
-  var pop00_click = d3.select("#pop00").on('click',function(){
-    sign=0;
-    MapUpdata("#PopMap", Map, popData00, 0, colExtent);
-  });
-  var pop10_click = d3.select("#pop10").on('click',function(){
-    sign=1;
-    MapUpdata("#PopMap", Map, popData10, 1, colExtent);
-  });
+function createDenBar(dendata){
+  console.log(dendata)
+  var yscale = d3.scale.linear().domain([0,dendata[0].value]).range([0,500]);
+  var y= d3.scale.linear().domain([dendata[0].value,0]).range([0,500]);
+  var yAxis = d3.svg.axis().scale(y).orient("left");
+  var svg=d3.select("#Denbar").append("svg")
+    .attr("width", 800)
+    .attr("height", 800);
+
+  svg.append("g")
+    .attr("class", "axis")
+    .attr("transform", "translate(" + 260 + "," + 100 + ")")
+    .call(yAxis);
+
+  var tip = d3.tip()
+    .attr('class', 'd3-tip')
+    .offset([0, 0])
+    .html(function(d) {
+        console.log(d)
+        return "State: "+d.key+"  Density: "+d.value+" people/per sq.km";
+    });
+
+  svg.call(tip);
+
+  var rect = svg.selectAll("rect")
+    .data(dendata)
+    .enter()    
+    .append("rect")
+    .attr("transform", "translate(" + 270 + "," + 0 + ")")
+    .attr("x", function(d,i){return i*45})
+    .attr("y", function(d,i){return 600-yscale(d.value)})
+    .attr("width", 40)
+    .attr("height", function(d,i){return yscale(d.value)})
+    .attr("fill", "blue")
+    .on('mouseover', function(d,i){
+        tip.show(d,i);
+        d3.select(this)
+          .classed("highlight", true);
+        d3.select("#DenMap").select("svg").selectAll("path")
+          .filter(function(d1,i1){
+            return d1.properties.name==d.key
+          })
+          .classed("highlight", true)
+    })
+    .on('mouseout', function(d,i){
+        tip.hide(d,i);
+        d3.select(this)
+          .classed("highlight", false);
+        d3.select("#DenMap").select("svg").selectAll("path")
+          .filter(function(d1,i1){
+            return d1.properties.name==d.key
+          })
+          .classed("highlight", false)
+    })
+};
+
+function getarea(name, areadata){
+  var s;
+  areadata.forEach(function(d){
+    if(d.地区==name){
+      s=d.area;
+    }
+  })
+  return Number(s);
 }
 
 function processData(errors, Map, popData00, popData10, areaData) {
