@@ -1,6 +1,6 @@
 function createMap(divId, Map, popData00, popData10) {
   var width = 1000;
-  var height = 1000;
+  var height = 800;
   var sign=0;
 
   var svg = d3.select(divId).append("svg")
@@ -182,19 +182,31 @@ function createDensity(divId, Map, popData00, popData10, areaData) {
     .projection(projection);
 
   var columnData = d3.map();
+
   popData10.forEach(function(d){
     if (d.地区!="全国"){
-      columnData.set(d.地区,  Number(d.人口数));
+      areaData.forEach(function(d1){
+        if (d1.地区==d.地区){
+          columnData.set(d.地区, Number(d.人口数)/Number(d1.area));
+        }
+      })
     }
   });
   var colExtent10 = d3.extent(columnData.values());
+  console.log(colExtent10)
   popData00.forEach(function(d){
     if (d.地区!="全国"){
-      columnData.set(d.地区,  Number(d.人口数));
+      areaData.forEach(function(d1){
+        if (d1.地区==d.地区){
+          columnData.set(d.地区, Number(d.人口数)/Number(d1.area));
+        }
+      })
     }
   });
-  columnData.set("台湾",23360000);
   var colExtent00 = d3.extent(columnData.values());
+  console.log(colExtent00)
+//  columnData.set("台湾",23360000);
+
   var colExtent = d3.extent(colExtent00.concat(colExtent10));
 
   var color = d3.scale.linear()
