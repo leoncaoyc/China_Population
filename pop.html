@@ -7,13 +7,22 @@
 	<h>Data Visualization (DCS 530/CIS 602-01)</h>
 	<h>Project</h>
 	<p>This assignment is all my own work. I did not copy the code from any other source.</p>
-	<link rel="stylesheet" href="designs.css" type="text/css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.20/topojson.min.js"></script>
-	<script src="designs.js"></script>
+    <script type="text/javascript" src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+	<script src="pop.js" charset="utf-8"></script>
+	<link rel="stylesheet" href="pop.css" type="text/css">
 </head>
 <body>
+	<div>
+		<table>
+			<tr>
+				<td><button id="pop00" type="button">2000 population</button></td>
+				<td><button id="pop10" type="button">2010 population</button></td>
+			</tr>
+		</table>
+	</div>
 	<div id="PopMap"></div>
 </body>
 </html>

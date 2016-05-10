@@ -1,0 +1,50 @@
+body {
+	font: 12px sans-serif;
+	margin: 0;
+	padding: 5px;
+	color: #888;
+}
+h1 {
+	padding-left: 10px;
+	margin-left: 400px;
+	margin-bottom: 2px;
+	color: #333;
+}
+	#country{
+		text-align: center;
+		font-size: 25px;
+	}
+.controls {
+	padding-top: 10px;
+	padding-left: 0px;
+	width: 540;
+	text-align: center;
+	font-size: 18px;
+}
+.controls span {
+	padding-left: 2px;
+	padding-right: 2px;
+}
+.controls a {
+	color: #888;
+	text-decoration: none;
+	font-variant: small-caps;
+	letter-spacing: 1;
+	text-decoration: none;
+}
+.controls a:hover {
+	color: #000;
+	text-decoration: underline;
+}
+.tooltip{
+	font-family: simsun;
+	font-size: 14px;
+	width: 120;
+	height: auto;
+	position: absolute;
+	text-align: center;
+	border-style: solid; 
+	border-width: 1px;
+	background-color: white;
+	border-radius: 5px;
+}
